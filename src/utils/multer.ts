@@ -6,7 +6,7 @@ import { StatusMessages } from "./http.status.messages";
 
 /*  
     Function: fileFilter
-    Purpose: Filters the uploaded files to allow only image files (JPEG, PNG,WebP) with a maximum size of 5MB.
+    Purpose: Filters the uploaded files to allow only image files (JPEG, PNG, WebP) with a maximum size of 5MB.
     Incoming: { req: Request, file: Express.Multer.File, cb: Function }
     - req: The incoming request object.
     - file: The file object uploaded by the user.
@@ -57,7 +57,8 @@ const validateImage = async (file: Express.Multer.File): Promise<boolean> => {
 
 /*  
     Function: handle images using multer
-    Purpose: Configures the multer middleware to handle image file uploads with memory storage, file filters, and file size limits.
+    Purpose: Configures the multer middleware to handle image file uploads with memory storage, 
+    file filters, and file size limits.
     Incoming: None
     Returns: A multer instance configured with storage, file filter, and file size limits.
     - File size limit is set to 5MB.

@@ -13,9 +13,8 @@ import { NextFunction, Request, Response } from "express";
 export const errorMiddleware = (
   err: AppError,
   req: Request,
-  res: Response,
-  next: NextFunction
-):void => {
+  res: Response
+): void => {
   const statusCode = err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
   const message = err.message || StatusMessages.INTERNAL_SERVER_ERROR;
   console.log("Error details:", {
@@ -26,5 +25,4 @@ export const errorMiddleware = (
     method: req.method,
   });
   sendResponse(res, statusCode, null, message);
-  next();
 };

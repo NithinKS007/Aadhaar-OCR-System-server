@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import { aadhaar } from "./routes/aadhaar.routes";
 import { errorMiddleware } from "./middlewares/error.middleware";
+import { notFoundMiddleware } from "./middlewares/not.found.middleware";
 
 dotenv.config();
 
@@ -18,7 +19,7 @@ const allowedOrigins = process.env.CLIENT_ORIGINS;
 app.use(
   cors({
     origin: allowedOrigins,
-    methods: ["GET","POST"],
+    methods: ["POST"],
     credentials: true,
   })
 );
@@ -26,6 +27,10 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes for aadhaar
 app.use("/api/v1/aadhaar", aadhaar);
+
+// Not-found middleware
+app.use(notFoundMiddleware)
+
 // Error-handling middleware.
 app.use(errorMiddleware);
 

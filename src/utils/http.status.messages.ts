@@ -4,5 +4,6 @@ export enum StatusMessages {
   FAILED_TO_EXTRACT_AADHAAR = "Failed to extract Aadhaar data",
   IMAGES_ARE_ONLY_ALLOWED = "Images are only allowed",
   ALL_FIELDS_ARE_REQUIRED = "All fields are required",
-  INVALID_AADHAAR = "Uploaded images do not appear to be Aadhaar card images. Please upload valid Aadhaar card images."
+  INVALID_AADHAAR = "Uploaded images do not appear to be Aadhaar card images. Please upload valid Aadhaar card images.",
+  NOT_FOUND = "Resource not found",
 }

@@ -1,4 +1,4 @@
-import { FileRequest } from "../types/images";
+import { FileRequest } from "../types/files";
 import { Response } from "express";
 import { AppError } from "../utils/app.error";
 import { StatusCodes } from "../utils/http.status.codes";
@@ -29,7 +29,11 @@ const extractAadhaarData = async (
   req: FileRequest,
   res: Response
 ): Promise<void> => {
-  if (!req?.files["frontSideImage"] || !req.files["backSideImage"]) {
+  if (
+    !req?.files ||
+    !req?.files["frontSideImage"] ||
+    !req.files["backSideImage"]
+  ) {
     throw new AppError(
       StatusMessages.ALL_FIELDS_ARE_REQUIRED,
       StatusCodes.BAD_REQUEST
@@ -45,7 +49,7 @@ const extractAadhaarData = async (
   ]);
 
   const validateAadhaar = keywords.some((keyword) =>
-    [...frontSideText, ...backSideText].map((text) =>
+    [frontSideText, backSideText].some((text) =>
       text.toLowerCase().includes(keyword.toLowerCase())
     )
   );
@@ -79,7 +83,7 @@ const extractAadhaarData = async (
   sendResponse(
     res,
     StatusCodes.OK,
-    { aadhaarDetails },
+    { ...aadhaarDetails },
     StatusMessages.EXTRACTION_SUCCESS
   );
 };
