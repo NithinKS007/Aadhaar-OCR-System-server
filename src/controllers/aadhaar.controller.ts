@@ -48,6 +48,30 @@ const extractAadhaarData = async (
     extractText(backImageBuffer),
   ]);
 
+  switch (frontSideText) {
+    case null:
+    case undefined:
+      throw new AppError(
+        StatusMessages.INVALID_FRONT_IMAGE,
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    default:
+      frontSideText;
+      break;
+  }
+
+  switch (backSideText) {
+    case null:
+    case undefined:
+      throw new AppError(
+        StatusMessages.INVALID_BACK_IMAGE,
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    default:
+      backSideText;
+      break;
+  }
+
   const validateAadhaar = keywords.some((keyword) =>
     [frontSideText, backSideText].some((text) =>
       text.toLowerCase().includes(keyword.toLowerCase())

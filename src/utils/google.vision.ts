@@ -1,24 +1,16 @@
 import { client } from "../config/google.vision.config";
-import { AppError } from "./app.error";
-import { StatusCodes } from "./http.status.codes";
-import { StatusMessages } from "./http.status.messages";
 
 /*  
     Function: extractText
     Purpose: Extracts text from an image buffer using Google Vision API's text detection.
     Incoming: { imageBuffer: <Buffer> } (A Buffer containing the image data to be processed)
-    Returns: A promise that resolves to the extracted text (string) from the image;
-    throws an AppError if text extraction fails.
+    Returns: A promise that resolves to the extracted text (string | null | undefined) from the image;
 */
-const extractText = async (imageBuffer: Buffer): Promise<string> => {
+const extractText = async (
+  imageBuffer: Buffer
+): Promise<string | null | undefined> => {
   const [result] = await client.textDetection(imageBuffer);
   const detections = result?.fullTextAnnotation?.text;
-  if (!detections) {
-    throw new AppError(
-      StatusMessages.FAILED_TO_EXTRACT_AADHAAR,
-      StatusCodes.BAD_REQUEST
-    );
-  }
   return detections;
 };
 
