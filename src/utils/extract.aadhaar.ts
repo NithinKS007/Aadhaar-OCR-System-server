@@ -6,8 +6,8 @@ import { AadhaarDetails } from "../types/aadhaar";
     Returns: The extracted address as a string; returns an empty string if address not found.
 */
 
-const extractAddress = (backText: string,frontText:string): string => {
-  const addressMatch = backText?.match(/(?<=Address:)([\s\S]*?\d{6})/) ||frontText.match(/(?<=Address:)([\s\S]*?\d{6})/)
+const extractAddress = (backText: string): string => {
+  const addressMatch = backText?.match(/(?<=Address:)([\s\S]*?\d{6})/);
   return addressMatch ? addressMatch[1].trim().replace(/\n/g, "") : "";
 };
 
@@ -18,8 +18,8 @@ const extractAddress = (backText: string,frontText:string): string => {
     Returns: The extracted Aadhaar number as a string without spaces; returns an empty string if not found.
 */
 
-const extractAadhaarNumber = (backText: string,frontText:string): string => {
-  const aadhaarNumberMatch = frontText?.match(/\d{4}\s\d{4}\s\d{4}/) ||backText?.match(/\d{4}\s\d{4}\s\d{4}/)
+const extractAadhaarNumber = (frontText: string): string => {
+  const aadhaarNumberMatch = frontText?.match(/\d{4}\s\d{4}\s\d{4}/);
   return aadhaarNumberMatch ? aadhaarNumberMatch[0]?.replace(/\s/g, "") : "";
 };
 
@@ -30,10 +30,10 @@ const extractAadhaarNumber = (backText: string,frontText:string): string => {
     Returns: The extracted name as a string; returns an empty string if name not found.
 */
 
-const extractName = (backText: string,frontText:string): string => {
+const extractName = (frontText: string): string => {
   const nameMatch = frontText.match(
     /(?<=Government of India\s*X\s*)([A-Za-z\s]+)(?=\sDOB)/
-  ) ||backText?.match( /(?<=Government of India\s*X\s*)([A-Za-z\s]+)(?=\sDOB)/)
+  );
   return nameMatch ? nameMatch[1].trim() : "";
 };
 
@@ -44,8 +44,8 @@ const extractName = (backText: string,frontText:string): string => {
     Returns: The extracted gender as a string; returns an empty string if gender not found.
 */
 
-const extractGender = (backText: string,frontText:string): string => {
-  const genderMatch = frontText.match(/पुरुष|Male|महिला|Female/)||backText?.match(/पुरुष|Male|महिला|Female/)
+const extractGender = (frontText: string): string => {
+  const genderMatch = frontText.match(/पुरुष|Male|महिला|Female/);
   return genderMatch ? genderMatch[0] : "";
 };
 
@@ -56,9 +56,9 @@ const extractGender = (backText: string,frontText:string): string => {
     Returns: The extracted date of birth in DD/MM/YYYY format; returns an empty string if not found.
 */
 
-const extractDob = (backText: string,frontText:string): string => {
+const extractDob = (frontText: string): string => {
   console.log("text", frontText);
-  const dobMatch = frontText.match(/DOB:\s*(\d{2}\/\d{2}\/\d{4})/)||backText?.match(/DOB:\s*(\d{2}\/\d{2}\/\d{4})/)
+  const dobMatch = frontText.match(/DOB:\s*(\d{2}\/\d{2}\/\d{4})/);
   return dobMatch ? dobMatch[1] : "";
 };
 
@@ -69,8 +69,8 @@ const extractDob = (backText: string,frontText:string): string => {
     Returns: The extracted pincode as a string; returns an empty string if pincode not found.
 */
 
-const extractPincode = (backText: string,frontText:string): string => {
-  const pincodeMatch = backText.match(/\d{6}/) ||frontText.match(/\d{6}/)
+const extractPincode = (backText: string): string => {
+  const pincodeMatch = backText.match(/\d{6}/);
   return pincodeMatch ? pincodeMatch[0] : "";
 };
 
@@ -88,12 +88,12 @@ export const extractAadhaarInfo = (
   backText: string
 ): AadhaarDetails => {
   const info: AadhaarDetails = {
-    dob: extractDob(frontText,backText),
-    aadhaarNumber: extractAadhaarNumber(frontText,backText),
-    gender: extractGender(frontText,backText),
-    name: extractName(frontText,backText),
-    address: extractAddress(backText,frontText),
-    pincode: extractPincode(backText,frontText),
+    dob: extractDob(frontText),
+    aadhaarNumber: extractAadhaarNumber(frontText),
+    gender: extractGender(frontText),
+    name: extractName(frontText),
+    address: extractAddress(backText),
+    pincode: extractPincode(backText),
   };
   console.log("info", info);
   return info;
