@@ -4,7 +4,9 @@ import cors from "cors";
 import { aadhaar } from "./routes/aadhaar.routes";
 import { errorMiddleware } from "./middlewares/error.middleware";
 import { notFoundMiddleware } from "./middlewares/not.found.middleware";
-
+import rateLimiter from "./middlewares/rate-limiter.middleware";
+import helmet from "helmet";
+import morgan from 'morgan';
 dotenv.config();
 
 const app = express();
@@ -16,6 +18,9 @@ const allowedOrigins = process.env.CLIENT_ORIGINS;
    - methods: Restrict allowed HTTP methods (only GET and POST are allowed here).
    - credentials: Allows the server to accept cookies sent by the client.
 */
+app.use(helmet());
+app.use("/api/v1", rateLimiter);
+app.use(morgan('combined'))
 app.use(
   cors({
     origin: allowedOrigins,
@@ -29,7 +34,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/v1/aadhaar", aadhaar);
 
 // Not-found middleware
-app.use(notFoundMiddleware)
+app.use(notFoundMiddleware);
 
 // Error-handling middleware.
 app.use(errorMiddleware);

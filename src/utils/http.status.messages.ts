@@ -8,4 +8,5 @@ export enum StatusMessages {
   NOT_FOUND = "Resource not found",
   INVALID_FRONT_IMAGE = "The uploaded image does not appear to be a valid Aadhaar card front image. Please upload a valid front image of the Aadhaar card.",
   INVALID_BACK_IMAGE = "The uploaded image does not appear to be a valid Aadhaar card back image. Please upload a valid back image of the Aadhaar card",
+  TOO_MANY_REQUESTS = "Too many requests. Please try again later."
 }
