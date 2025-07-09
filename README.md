@@ -11,6 +11,13 @@ This backend service provides an API for users to upload front and back images o
 - **Data Validation**: Verifies if the uploaded images are Aadhaar cards by checking for keywords like "Government of India", "Unique Identification Authority of India", "भारत सरकार", "भारतीय विशिष्ट पहचान प्राधिकरण",.
 - **Aadhaar Card Details Extraction** : Extracts key Aadhaar card details such as name, Aadhaar number, date of birth, gender, and address
 - **Error Handling**: Centralized error handling for API failures and incorrect routes.
+- **Security Enhancements:
+
+Rate Limiting: Protects against excessive requests by limiting the number of requests a client can make to the API within a specified time period (using express-rate-limit).
+
+Logging: Request logging for debugging and monitoring using morgan.
+
+Helmet: Adds security-related HTTP headers to prevent vulnerabilities like cross-site scripting (XSS), clickjacking, and more.
 
 ## 📋 Prerequisites
 
@@ -91,7 +98,8 @@ server/
 │
 ├── middleware/                     # Middleware for different processes
 │   ├── error.middleware.ts         # Error handling middleware
-│   └── not.found.middleware.ts     # Not found middleware
+│   ├── not.found.middleware.ts     # Not found middleware
+│   └── ratelimit.middleware.ts     # Morgan logging middleware
 │
 │
 ├── routes/                         # API route definitions
@@ -145,6 +153,9 @@ Response:
 - File uploads are restricted to "image/jpeg", "image/png", "image/webp", only
 - Multer middleware for secure file handling
 - Size limits on uploads
+- Rate Limiting: This API uses express-rate-limit to limit the number of requests each user can make within a given time frame (default 100 requests per 15 minutes).
+- Request Logging: All incoming requests are logged using Morgan, which provides useful information like HTTP method, URL, status code, and response time.
+- Helmet: This API uses Helmet to secure HTTP headers, helping to prevent common vulnerabilities such as cross-site scripting (XSS), clickjacking, and others.
 
 ## ⚠️ Error Handling
 
@@ -187,7 +198,10 @@ The server includes centralized error handling middleware that catches and proce
   "multer": "^1.4.5-lts.2", // Middleware for handling file uploads
   "nodemon": "^3.1.10", // Development tool for auto-restarting the server during code changes
   "ts-node": "^10.9.2", // TypeScript execution engine for Node.js
-  "typescript": "^5.8.3" // TypeScript compiler
+  "typescript": "^5.8.3", // TypeScript compiler
+  "express-rate-limit": "^5.0.0", // Rate limiting middleware
+  "morgan": "^1.10.0", // Request logging middleware
+  "helmet": "^5.0.0" // HTTP headers security middleware
 }
 ```
 
@@ -197,7 +211,10 @@ The server includes centralized error handling middleware that catches and proce
 {
   "@types/cors": "^2.8.18", // Type definitions for CORS middleware
   "@types/dotenv": "^6.1.1", // Type definitions for dotenv
-  "@types/multer": "^1.4.12" // Type definitions for multer
+  "@types/multer": "^1.4.12", // Type definitions for multer
+  "@types/morgan": "^1.9.2", // Type definitions for morgan logging middleware
+  "@types/helmet": "^0.0.50", // Type definitions for helmet
+  "@types/express-rate-limit": "^5.0.0" // Type definitions for express-rate-limit
 }
 ```
 
