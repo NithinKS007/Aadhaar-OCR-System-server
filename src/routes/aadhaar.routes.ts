@@ -1,7 +1,6 @@
 import express from "express";
-import expressAsyncHandler from "express-async-handler";
-import { extractAadhaarData } from "../controllers/aadhaar.controller";
-import upload from "../utils/multer";
+import { aadhaarController, fileService } from "@di/container-resolver";
+import { asyncHandler } from "@utils/async-handler";
 export const aadhaar = express.Router();
 
 /*  
@@ -22,9 +21,9 @@ export const aadhaar = express.Router();
 
 aadhaar.post(
   "/extract",
-  upload.fields([
+  fileService.configureUpload().fields([
     { name: "frontSideImage", maxCount: 1 },
     { name: "backSideImage", maxCount: 1 },
   ]),
-  expressAsyncHandler(extractAadhaarData as any) 
+  asyncHandler(aadhaarController.handle.bind(aadhaarController)) 
 );

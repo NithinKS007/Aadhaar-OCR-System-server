@@ -1,6 +1,6 @@
-import { StatusCodes } from "../utils/http.status.codes";
-import { StatusMessages } from "../utils/http.status.messages";
-import { sendResponse } from "../utils/send.response";
+import { StatusCodes } from "@utils/http.status.codes";
+import { StatusMessages } from "@utils/http.status.messages";
+import { sendResponse } from "@utils/send.response";
 import { Request, Response } from "express";
 
 /*  

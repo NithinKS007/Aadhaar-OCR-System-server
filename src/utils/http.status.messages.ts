@@ -4,9 +4,10 @@ export enum StatusMessages {
   FAILED_TO_EXTRACT_AADHAAR = "Failed to extract Aadhaar data",
   IMAGES_ARE_ONLY_ALLOWED = "Images are only allowed",
   ALL_FIELDS_ARE_REQUIRED = "All fields are required",
-  INVALID_AADHAAR = "Please upload the front and back images of the Aadhaar card in the correct positions",
+  INVALID_AADHAAR = "Please upload clear, valid images of both the front and back sides of the Aadhaar card",
   NOT_FOUND = "Resource not found",
   INVALID_FRONT_IMAGE = "The uploaded image does not appear to be a valid Aadhaar card front image. Please upload a valid front image of the Aadhaar card.",
   INVALID_BACK_IMAGE = "The uploaded image does not appear to be a valid Aadhaar card back image. Please upload a valid back image of the Aadhaar card",
-  TOO_MANY_REQUESTS = "Too many requests. Please try again later."
+  TOO_MANY_REQUESTS = "Too many requests. Please try again later.",
+  NO_ENV = "Environment variables not found",
 }

@@ -1,105 +1,56 @@
-import { FileRequest } from "../types/files";
+import { IAadhaarService } from "@di/file-imports-index";
+import { TYPES_SERVICES } from "@di/types-services";
 import { Response } from "express";
-import { AppError } from "../utils/app.error";
-import { StatusCodes } from "../utils/http.status.codes";
-import { StatusMessages } from "../utils/http.status.messages";
-import { extractText } from "../utils/google.vision";
-import { extractAadhaarInfo } from "../utils/extract.aadhaar";
-import { sendResponse } from "../utils/send.response";
+import { IControllers } from "@interfaces/controllers/IControllers";
+import { inject, injectable } from "inversify";
+import FileRequest from "types/files";
+import { AppError } from "@utils/app.error";
+import { StatusCodes } from "@utils/http.status.codes";
+import { StatusMessages } from "@utils/http.status.messages";
+import { sendResponse } from "@utils/send.response";
 
-const keywords = [
-  "Government of India",
-  "Unique Identification Authority of India",
-  "भारत सरकार",
-  "भारतीय विशिष्ट पहचान प्राधिकरण",
-];
 /*  
-    Route: POST api/v1/aadhaar/extract
-    Purpose: Extract Aadhaar details from uploaded front and back images of the Aadhaar card.
-    Incoming: { frontImage: File, backImage: File } (body)
-    - frontImage: The front image of the Aadhaar card (uploaded by the user).
-    - backImage: The back image of the Aadhaar card (uploaded by the user).
-    Returns: 
-    - { aadhaarDetails: Object, message: string }
-    - aadhaarDetails: The extracted Aadhaar details.
-    - message: A success message indicating that the extraction was successful.
+    Module: Aadhaar Controller
+    Purpose: Handles Aadhaar extraction from uploaded front and back images.
+    Description:
+      - Validates the request for required images and extracts Aadhaar details via `AadhaarService`.
+    Incoming:
+      - `frontSideImage` and `backSideImage`: Uploaded Aadhaar card images.
+    Returns:
+      - Extracted Aadhaar details or an error if the validation fails.
 */
 
-const extractAadhaarData = async (
-  req: FileRequest,
-  res: Response
-): Promise<void> => {
-  if (
-    !req?.files ||
-    !req?.files["frontSideImage"] ||
-    !req.files["backSideImage"]
-  ) {
-    throw new AppError(
-      StatusMessages.ALL_FIELDS_ARE_REQUIRED,
-      StatusCodes.BAD_REQUEST
+@injectable()
+export class AadhaarController implements IControllers {
+  constructor(
+    @inject(TYPES_SERVICES.AadhaarService)
+    private AadhaarService: IAadhaarService
+  ) {}
+  async handle(req: FileRequest, res: Response): Promise<void> {
+    if (
+      !req?.files ||
+      !req?.files["frontSideImage"] ||
+      !req.files["backSideImage"]
+    ) {
+      throw new AppError(
+        StatusMessages.ALL_FIELDS_ARE_REQUIRED,
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
+    const frontImageBuffer = req.files["frontSideImage"][0].buffer;
+    const backImageBuffer = req.files["backSideImage"][0].buffer;
+
+    const extractDetails = await this.AadhaarService.extract({
+      frontImageBuffer,
+      backImageBuffer,
+    });
+
+    sendResponse(
+      res,
+      StatusCodes.OK,
+      { ...extractDetails },
+      StatusMessages.EXTRACTION_SUCCESS
     );
   }
-
-  const frontImageBuffer = req.files["frontSideImage"][0].buffer;
-  const backImageBuffer = req.files["backSideImage"][0].buffer;
-
-  const [frontSideText, backSideText] = await Promise.all([
-    extractText(frontImageBuffer),
-    extractText(backImageBuffer),
-  ]);
-
-  if (frontSideText == null) {
-    throw new AppError(
-      StatusMessages.INVALID_FRONT_IMAGE,
-      StatusCodes.INTERNAL_SERVER_ERROR
-    );
-  }
-
-  if (backSideText == null) {
-    throw new AppError(
-      StatusMessages.INVALID_BACK_IMAGE,
-      StatusCodes.INTERNAL_SERVER_ERROR
-    );
-  }
-
-  const validateAadhaar = keywords.some((keyword) =>
-    [frontSideText, backSideText].some((text) =>
-      text.toLowerCase().includes(keyword.toLowerCase())
-    )
-  );
-
-  if (!validateAadhaar) {
-    throw new AppError(StatusMessages.INVALID_AADHAAR, StatusCodes.BAD_REQUEST);
-  }
-  const { aadhaarNumber, name, gender, dob, address, pincode } =
-    extractAadhaarInfo(frontSideText, backSideText);
-
-  const aadhaarDetails = {
-    aadhaarNumber,
-    name,
-    gender,
-    dob,
-    address,
-    pincode,
-  };
-
-  if (
-    !aadhaarDetails.aadhaarNumber ||
-    !aadhaarDetails.name ||
-    !aadhaarDetails.gender ||
-    !aadhaarDetails.dob ||
-    !aadhaarDetails.address ||
-    !aadhaarDetails.pincode
-  ) {
-    throw new AppError(StatusMessages.INVALID_AADHAAR, StatusCodes.BAD_REQUEST);
-  }
-
-  sendResponse(
-    res,
-    StatusCodes.OK,
-    { ...aadhaarDetails },
-    StatusMessages.EXTRACTION_SUCCESS
-  );
-};
-
-export { extractAadhaarData };
+}

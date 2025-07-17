@@ -1,10 +1,10 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import { aadhaar } from "./routes/aadhaar.routes";
-import { errorMiddleware } from "./middlewares/error.middleware";
-import { notFoundMiddleware } from "./middlewares/not.found.middleware";
-import rateLimiter from "./middlewares/rate-limiter.middleware";
+import { aadhaar } from "@routes/aadhaar.routes";
+import { errorMiddleware } from "@middlewares/error.middleware";
+import { notFoundMiddleware } from "@middlewares/not.found.middleware";
+import rateLimiter from "@middlewares/rate-limiter.middleware";
 import helmet from "helmet";
 import morgan from 'morgan';
 dotenv.config();

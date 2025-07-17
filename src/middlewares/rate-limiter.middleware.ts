@@ -1,8 +1,8 @@
 import rateLimit from "express-rate-limit";
 import { Request, Response } from "express";
-import { StatusMessages } from "../utils/http.status.messages";
-import { StatusCodes } from "../utils/http.status.codes";
-import { sendResponse } from "../utils/send.response";
+import { StatusMessages } from "@utils/http.status.messages";
+import { StatusCodes } from "@utils/http.status.codes";
+import { sendResponse } from "@utils/send.response";
 
 const handleRateLimitExceeded = (req: Request, res: Response) => {
   sendResponse(

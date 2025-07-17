@@ -3,10 +3,21 @@
   "version": "1.0.0",
   "main": "dist/index.js",
   "scripts": {
-    "start": "ts-node src/index.ts",
-    "dev": "nodemon --exec ts-node src/index.ts",
+    "start": "node -r module-alias/register dist/index.js",
+    "dev": "nodemon -r tsconfig-paths/register src/index.ts",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "_moduleAliases": {
+    "@di": "dist/di",
+    "@controllers": "dist/controllers",
+    "@server": "dist/server.js",
+    "@index": "dist/index.js",
+    "@interfaces": "dist/interfaces",
+    "@middlewares": "dist/middlewares",
+    "@routes": "dist/routes",
+    "@services": "dist/services",
+    "@utils": "dist/utils"
   },
   "keywords": [],
   "author": "",
@@ -19,12 +30,17 @@
     "express": "^5.1.0",
     "express-async-handler": "^1.2.0",
     "express-rate-limit": "^7.5.1",
+    "express-validator": "^7.2.1",
     "helmet": "^8.1.0",
+    "inversify": "^7.6.1",
+    "module-alias": "^2.2.3",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.2",
     "nodemon": "^3.1.10",
+    "reflect-metadata": "^0.2.2",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "winston": "^3.17.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.18",
@@ -33,6 +49,7 @@
     "@types/helmet": "^0.0.48",
     "@types/morgan": "^1.9.10",
     "@types/multer": "^1.4.12",
-    "@types/node": "^24.0.12"
+    "@types/node": "^24.0.12",
+    "tsconfig-paths": "^4.2.0"
   }
 }

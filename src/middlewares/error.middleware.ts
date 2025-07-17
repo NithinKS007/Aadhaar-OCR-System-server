@@ -1,7 +1,7 @@
-import { AppError } from "../utils/app.error";
-import { StatusCodes } from "../utils/http.status.codes";
-import { StatusMessages } from "../utils/http.status.messages";
-import { sendResponse } from "../utils/send.response";
+import { AppError } from "@utils/app.error";
+import { StatusCodes } from "@utils/http.status.codes";
+import { StatusMessages } from "@utils/http.status.messages";
+import { sendResponse } from "@utils/send.response";
 import { NextFunction, Request, Response } from "express";
 
 /*  
