@@ -10,4 +10,6 @@ export enum StatusMessages {
   INVALID_BACK_IMAGE = "The uploaded image does not appear to be a valid Aadhaar card back image. Please upload a valid back image of the Aadhaar card",
   TOO_MANY_REQUESTS = "Too many requests. Please try again later.",
   NO_ENV = "Environment variables not found",
+  Back_SIDE_IMAGE_REQUIRED = "Back side image is required",
+  FRONT_SIDE_IMAGE_REQUIRED = "Front side image is required",
 }

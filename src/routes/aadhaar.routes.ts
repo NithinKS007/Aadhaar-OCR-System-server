@@ -1,6 +1,8 @@
 import express from "express";
 import { aadhaarController, fileService } from "@di/container-resolver";
 import { asyncHandler } from "@utils/async-handler";
+import { validateAadhaarSchema } from "@middlewares/validationSchemas/file-validation";
+import { validate } from "@middlewares/validationMiddleware";
 export const aadhaar = express.Router();
 
 /*  
@@ -25,5 +27,6 @@ aadhaar.post(
     { name: "frontSideImage", maxCount: 1 },
     { name: "backSideImage", maxCount: 1 },
   ]),
+  validateAadhaarSchema,validate,
   asyncHandler(aadhaarController.handle.bind(aadhaarController)) 
 );
