@@ -8,7 +8,6 @@ import { Request } from "express";
 
 @injectable()
 export class FileService implements IFileService {
-
   /*  
     Function: validateImage
     Purpose: Validates if the uploaded file is an image by checking its mimetype.
@@ -21,8 +20,6 @@ export class FileService implements IFileService {
 
   private async validateFile(file: Express.Multer.File): Promise<boolean> {
     const allowedMimes = ["image/jpeg", "image/png", "image/webp"];
-
-    console.log("hello validation", file);
     return allowedMimes.includes(file.mimetype);
   }
 

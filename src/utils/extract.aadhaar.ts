@@ -63,7 +63,6 @@ const extractGender = (backText: string, frontText: string): string => {
 */
 
 const extractDob = (backText: string, frontText: string): string => {
-  console.log("text", frontText);
   const dobMatch =
     frontText.match(/DOB:\s*(\d{2}\/\d{2}\/\d{4})/) ||
     backText?.match(/DOB:\s*(\d{2}\/\d{2}\/\d{4})/);

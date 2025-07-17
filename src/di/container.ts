@@ -6,7 +6,9 @@ import {
   IAadhaarService,
   IControllers,
   IFileService,
+  ILoggerService,
   ITextExtractService,
+  LoggerService,
   TextExtractService,
   TYPES_CONTROLLERS,
   TYPES_SERVICES,
@@ -18,3 +20,4 @@ container.bind<IControllers>(TYPES_CONTROLLERS.AadhaarController).to(AadhaarCont
 container.bind<ITextExtractService>(TYPES_SERVICES.TextExtractService).to(TextExtractService)
 container.bind<IFileService>(TYPES_SERVICES.FileService).to(FileService)
 container.bind<IAadhaarService>(TYPES_SERVICES.AadhaarService).to(AadhaarService)
+container.bind<ILoggerService>(TYPES_SERVICES.LoggerService).to(LoggerService)

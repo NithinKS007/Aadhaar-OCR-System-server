@@ -7,10 +7,12 @@ export {
   IAadhaarService,
   IFileService,
   ITextExtractService,
+  ILoggerService
 } from "@interfaces/services/IServices";
 export { TextExtractService } from "@services/text-extract.service";
 export { FileService } from "@services/file.service";
 export { AadhaarService } from "@services/aadhaar.service";
+export { LoggerService } from "@services/logger.service";
 
 // CONTROLLER TYPES CONSTANTS
 export { TYPES_CONTROLLERS } from "@di/types-controllers";

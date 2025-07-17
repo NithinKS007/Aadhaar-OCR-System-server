@@ -6,7 +6,7 @@ import { errorMiddleware } from "@middlewares/error.middleware";
 import { notFoundMiddleware } from "@middlewares/not.found.middleware";
 import rateLimiter from "@middlewares/rate-limiter.middleware";
 import helmet from "helmet";
-import morgan from 'morgan';
+import { ReqLogService } from "@di/container-resolver";
 dotenv.config();
 
 const app = express();
@@ -20,7 +20,7 @@ const allowedOrigins = process.env.CLIENT_ORIGINS;
 */
 app.use(helmet());
 app.use("/api/v1", rateLimiter);
-app.use(morgan('combined'))
+app.use(ReqLogService.streamLog())
 app.use(
   cors({
     origin: allowedOrigins,
