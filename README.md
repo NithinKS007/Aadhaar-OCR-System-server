@@ -11,11 +11,11 @@ This backend service provides an API for users to upload front and back images o
 - **Data Validation**: Verifies if the uploaded images are Aadhaar cards by checking for keywords like "Government of India", "Unique Identification Authority of India", "भारत सरकार", "भारतीय विशिष्ट पहचान प्राधिकरण",.
 - **Aadhaar Card Details Extraction** : Extracts key Aadhaar card details such as name, Aadhaar number, date of birth, gender, and address
 - **Error Handling**: Centralized error handling for API failures and incorrect routes.
-- **Security Enhancements:
+- \*\*Security Enhancements:
 
 Rate Limiting: Protects against excessive requests by limiting the number of requests a client can make to the API within a specified time period (using express-rate-limit).
 
-Logging: Request logging for debugging and monitoring using morgan.
+Logging: Request logging for debugging and monitoring using morgan + winston.
 
 Helmet: Adds security-related HTTP headers to prevent vulnerabilities like cross-site scripting (XSS), clickjacking, and more.
 
@@ -81,26 +81,23 @@ The server will start on `http://localhost:9000` by default.
 ```
 server/
 │
-├── .env                    # Environment variables
-├── .gitignore              # Git ignore configuration
-├── package-lock.json       # Package lock for npm
-├── package.json            # Project dependencies and scripts
-├── README.md               # Project documentation
-├── tsconfig.json           # TypeScript configuration
-│
-├── config/                 # Configuration files
-│   ├── google.vision
-│   │    .config            # Vision configuration
-│
+├── .env                            # Environment variables
+├── .gitignore                      # Git ignore configuration
+├── package-lock.json               # Package lock for npm
+├── package.json                    # Project dependencies and scripts
+├── README.md                       # Project documentation
+├── tsconfig.json                   # TypeScript configuration
 │
 ├── controllers/                    # Controllers for handling business logic
 │   ├── aadhaar.controller.ts       # aadhaar controller
 │
+├── di/                             # Dependency Injection
+│
 ├── middleware/                     # Middleware for different processes
 │   ├── error.middleware.ts         # Error handling middleware
 │   ├── not.found.middleware.ts     # Not found middleware
-│   └── ratelimit.middleware.ts     # Morgan logging middleware
-│
+│   └── ratelimit.middleware.ts     # Morgan logging middleware│
+│   └── validation.middleware.ts     # Morgan logging middleware│
 │
 ├── routes/                         # API route definitions
 │   ├── aadhaar.routes.ts           # Aadhaar routes
@@ -108,14 +105,14 @@ server/
 ├── types/                          # TypeScript type definitions
 │   ├── aadhaar.ts                  # Aadhaar types
 │   └── files.ts                    # Incoming files types
+├── services/                       # External service files
 │
 ├── utils/                          # Utility functions
 │   ├── app.error.ts                # App-wide error handling
 │   ├── extract.aadhaar.ts          # Extract aadhaar details from text utility functions
-│   ├── google.vision.ts            # Google vision api integration to extract text from image utility
 │   ├── http.status.codes.ts        # HTTP status codes
 │   ├── http.status.messages.ts     # HTTP status messages
-│   ├── multer.ts                   # Multer file upload utility
+│   ├── async-handler.ts            # Async handler
 │   ├── send.response.ts            # Response sender utility
 │
 │
@@ -171,7 +168,8 @@ The server includes centralized error handling middleware that catches and proce
 
 1. Create necessary route in `routes/`
 2. Implement controller logic in `controllers/`
-3. Add any required middleware in `middlewares/`
+3. Imlement new service logic in `services/`
+4. Add any required middleware in `middlewares/`
 
 ### Code Style
 
@@ -188,20 +186,23 @@ The server includes centralized error handling middleware that catches and proce
 
 ```json
 {
-  "@google-cloud/vision": "^5.1.0", // Google Cloud Vision API for OCR functionality
-  "@types/express": "^5.0.2", // Type definitions for Express.js
-  "@types/node": "^22.15.18", // Type definitions for Node.js
-  "cors": "^2.8.5", // Middleware for handling Cross-Origin Resource Sharing (CORS)
-  "dotenv": "^16.5.0", // Loads environment variables from a .env file
-  "express": "^5.1.0", // Web framework for building APIs
-  "express-async-handler": "^1.2.0", // Middleware for handling asynchronous routes
-  "multer": "^1.4.5-lts.2", // Middleware for handling file uploads
-  "nodemon": "^3.1.10", // Development tool for auto-restarting the server during code changes
-  "ts-node": "^10.9.2", // TypeScript execution engine for Node.js
-  "typescript": "^5.8.3", // TypeScript compiler
-  "express-rate-limit": "^5.0.0", // Rate limiting middleware
-  "morgan": "^1.10.0", // Request logging middleware
-  "helmet": "^5.0.0" // HTTP headers security middleware
+  "@google-cloud/vision": "^5.1.0",
+  "cors": "^2.8.5",
+  "dotenv": "^16.5.0",
+  "express": "^5.1.0",
+  "express-async-handler": "^1.2.0",
+  "express-rate-limit": "^7.5.1",
+  "express-validator": "^7.2.1",
+  "helmet": "^8.1.0",
+  "inversify": "^7.6.1",
+  "module-alias": "^2.2.3",
+  "morgan": "^1.10.0",
+  "multer": "^1.4.5-lts.2",
+  "nodemon": "^3.1.10",
+  "reflect-metadata": "^0.2.2",
+  "ts-node": "^10.9.2",
+  "typescript": "^5.8.3",
+  "winston": "^3.17.0"
 }
 ```
 
@@ -209,12 +210,14 @@ The server includes centralized error handling middleware that catches and proce
 
 ```json
 {
-  "@types/cors": "^2.8.18", // Type definitions for CORS middleware
-  "@types/dotenv": "^6.1.1", // Type definitions for dotenv
-  "@types/multer": "^1.4.12", // Type definitions for multer
-  "@types/morgan": "^1.9.2", // Type definitions for morgan logging middleware
-  "@types/helmet": "^0.0.50", // Type definitions for helmet
-  "@types/express-rate-limit": "^5.0.0" // Type definitions for express-rate-limit
+  "@types/cors": "^2.8.18",
+  "@types/dotenv": "^6.1.1",
+  "@types/express": "^5.0.3",
+  "@types/helmet": "^0.0.48",
+  "@types/morgan": "^1.9.10",
+  "@types/multer": "^1.4.12",
+  "@types/node": "^24.0.12",
+  "tsconfig-paths": "^4.2.0"
 }
 ```
 
