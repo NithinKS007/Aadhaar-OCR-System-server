@@ -1,6 +1,6 @@
 // CONTROLLERS
 export { IControllers } from "@interfaces/controllers/IControllers";
-export { AadhaarController } from "@controllers/Aadhaar.controller";
+export { AadhaarController } from "@controllers/aadhaar.controller";
 
 // SERVICES
 export {
