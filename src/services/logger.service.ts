@@ -28,18 +28,16 @@ class LoggerService implements ILoggerService {
     this.logger = createLogger({
       level: development ? "debug" : "info",
       format: development ? devFormat : nonDevFormat,
-      defaultMeta: { service: "Aadhaar-OCR-System-Server" },
-      transports: [
-        new transports.Console(),
-      ],
+      defaultMeta: { service: "AADHAAR-OCR-SYSTEM-SERVER" },
+      transports: [new transports.Console()],
     });
   }
 
-  public log(message: string): void {
+  log(message: string): void {
     this.logger.info(message);
   }
 
-  public error(message: string, error?: Error): void {
+  error(message: string, error?: Error): void {
     if (error) {
       this.logger.error(message, error);
     } else {
@@ -47,19 +45,19 @@ class LoggerService implements ILoggerService {
     }
   }
 
-  public warn(message: string): void {
+  warn(message: string): void {
     this.logger.warn(message);
   }
 
-  public debug(message: string): void {
+  debug(message: string): void {
     this.logger.debug(message);
   }
 
-  public verbose(message: string): void {
+  verbose(message: string): void {
     this.logger.verbose(message);
   }
 
-  public streamLog(): Handler {
+  streamLog(): Handler {
     return morgan(
       ":method :url :status :res[content-length] - :response-time ms",
       {
